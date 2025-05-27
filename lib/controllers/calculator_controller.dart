@@ -87,22 +87,29 @@ class CalculatorController extends GetxController {
       return;
     }
 
-    // Prevent evaluation if expression ends with an operator or open function/decimal
-    if (_endsWithOperator() ||
-        _endsWithDecimal() ||
-        _endsWithOpenFunction() ||
-        !_hasBalancedParentheses()) {
-      currentResult.value = '';
-      return;
+    // Try to "close" open functions for preview
+    String expression = currentExpression.value;
+
+    // Auto-close open parentheses if a number follows
+    if (_hasUnbalancedFunctionParenthesis(expression)) {
+      expression += ')'; // try closing the function call
     }
 
     try {
-      currentResult.value = _calculatorService.evaluate(
-        currentExpression.value,
-      );
+      currentResult.value = _calculatorService.evaluate(expression);
     } catch (e) {
-      currentResult.value = 'Error';
+      currentResult.value = '';
     }
+  }
+
+  bool _hasUnbalancedFunctionParenthesis(String expr) {
+    final openFunctions = ['sin(', 'cos(', 'tan(', 'log(', '√('];
+    for (var func in openFunctions) {
+      if (expr.contains(func) && !expr.contains(')')) {
+        return true;
+      }
+    }
+    return false;
   }
 
   bool _endsWithDecimal() {
