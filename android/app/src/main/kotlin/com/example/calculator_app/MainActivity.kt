@@ -1,4 +1,4 @@
-package com.wAsadVPN_17861620
+package com.calculatorPros.app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,6 +1,6 @@
-// main.dart
 import 'package:calculator_app/views/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'views/calculator_view.dart';
@@ -20,40 +20,68 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light().copyWith(
         colorScheme: ColorScheme.light(
-          primary: Color(0xFF6C63FF),
-          secondary: Color(0xFF4A47A3),
-          background: Color(0xFFF5F5F5),
-          surface: Colors.white,
-          onBackground: Colors.black,
-          onSurface: Colors.black,
-          onPrimary: Colors.white,
-          error: Color(0xFFFF6B6B),
+          primary: Color(0xFFFA980B), // Vibrant orange
+          secondary: Color.fromARGB(255, 139, 196, 250), // Modern purple accent
+          background: Color(0xFFF8FAFC), // Soft off-white
+          surface: Color(0xFFFFFFFF),
+          onBackground: Color(0xFF1E293B), // Deep slate for text
+          onSurface: Color(0xFF1E293B),
+          onPrimary: Color(0xFF1E293B), // Dark text for contrast on orange
+          error: Color(0xFFF43F5E), // Modern rose error
         ),
-        textTheme: GoogleFonts.poppinsTextTheme(),
+        textTheme: GoogleFonts.interTextTheme().apply(
+          bodyColor: Color(0xFF1E293B),
+          displayColor: Color(0xFF1E293B),
+        ),
         appBarTheme: AppBarTheme(
           elevation: 0,
           centerTitle: true,
           backgroundColor: Colors.transparent,
-          foregroundColor: Color(0xFF4A47A3),
+          foregroundColor: Color(0xFF1E293B),
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+        ),
+        scaffoldBackgroundColor: Color(0xFFF8FAFC),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        cardTheme: CardThemeData(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
         ),
       ),
       darkTheme: ThemeData.dark().copyWith(
         colorScheme: ColorScheme.dark(
-          primary: Color(0xFF6C63FF),
-          secondary: Color(0xFF4A47A3),
-          background: Color(0xFF121212),
-          surface: Color(0xFF1E1E1E),
-          onBackground: Colors.white,
-          onSurface: Colors.white,
-          onPrimary: Colors.white,
-          error: Color(0xFFFF6B6B),
+          primary: Color(0xFFFA980B), // Vibrant orange
+          secondary: Color.fromARGB(
+            255,
+            139,
+            196,
+            250,
+          ), // Light purple accent (fixed from 0xFFA980A)
+          background: Color(0xFF0F172A), // Deep slate background
+          surface: Color(0xFF1E293B), // Darker surface
+          onBackground: Color(0xFFE2E8F0), // Light slate for text
+          onSurface: Color(0xFFE2E8F0),
+          onPrimary: Color(0xFF1E293B), // Dark text for contrast on orange
+          error: Color(0xFFF87171), // Softer rose for errors
         ),
-        textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
+        textTheme: GoogleFonts.interTextTheme(
+          ThemeData.dark().textTheme,
+        ).apply(bodyColor: Color(0xFFE2E8F0), displayColor: Color(0xFFE2E8F0)),
         appBarTheme: AppBarTheme(
           elevation: 0,
           centerTitle: true,
           backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white,
+          foregroundColor: Color(0xFFE2E8F0),
+          systemOverlayStyle: SystemUiOverlayStyle.light,
+        ),
+        scaffoldBackgroundColor: Color(0xFF0F172A),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        cardTheme: CardThemeData(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
         ),
       ),
       home: SplashScreen(),
@@ -78,47 +106,63 @@ class MainScreen extends StatelessWidget {
       bottomNavigationBar: Obx(
         () => Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            gradient: LinearGradient(
+              colors: [
+                Get.theme.colorScheme.surface,
+                Get.theme.colorScheme.surface.withOpacity(0.95),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 12,
                 spreadRadius: 2,
+                offset: Offset(0, -2),
               ),
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             child: BottomNavigationBar(
               currentIndex: currentIndex.value,
               onTap: (index) => currentIndex.value = index,
               type: BottomNavigationBarType.fixed,
-              backgroundColor: Get.theme.colorScheme.surface,
+              backgroundColor: Colors.transparent,
               selectedItemColor: Get.theme.colorScheme.primary,
               unselectedItemColor: Get.theme.colorScheme.onSurface.withOpacity(
-                0.6,
+                0.5,
               ),
-              selectedLabelStyle: GoogleFonts.poppins(fontSize: 12),
-              unselectedLabelStyle: GoogleFonts.poppins(fontSize: 12),
+              selectedLabelStyle: GoogleFonts.inter(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+              unselectedLabelStyle: GoogleFonts.inter(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+              ),
+              elevation: 0,
               items: [
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.calculate_outlined),
-                  activeIcon: Icon(Icons.calculate),
+                  icon: Icon(Icons.calculate_outlined, size: 28),
+                  activeIcon: Icon(Icons.calculate, size: 28),
                   label: 'Basic',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.science_outlined),
-                  activeIcon: Icon(Icons.science),
+                  icon: Icon(Icons.science_outlined, size: 28),
+                  activeIcon: Icon(Icons.science, size: 28),
                   label: 'Scientific',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.history_outlined),
-                  activeIcon: Icon(Icons.history),
+                  icon: Icon(Icons.history_outlined, size: 28),
+                  activeIcon: Icon(Icons.history, size: 28),
                   label: 'History',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.settings_outlined),
-                  activeIcon: Icon(Icons.settings),
+                  icon: Icon(Icons.settings_outlined, size: 28),
+                  activeIcon: Icon(Icons.settings, size: 28),
                   label: 'Settings',
                 ),
               ],
